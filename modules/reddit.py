@@ -2,11 +2,12 @@
 import praw
 import random
 import json
+import os
 import modules.config as conf
 
 # Connect to Reddit via PRAW
 reddit = praw.Reddit(client_id='Us-byLFTjQmSJQ',
-                     client_secret=conf.reddit_client_secret,
+                     client_secret=os.environ.get('REDDIT_SECRET', ""),
                      user_agent='python:com.ryanabraham.whophone:v1.0')
 
 # search_text should be passed in as a string
