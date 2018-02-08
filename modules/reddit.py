@@ -3,7 +3,6 @@ import praw
 import random
 import json
 import os
-import modules.config as conf
 
 # Connect to Reddit via PRAW
 reddit = praw.Reddit(client_id='Us-byLFTjQmSJQ',
