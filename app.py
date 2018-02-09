@@ -15,16 +15,20 @@ def index():
         return random.choice(lines) + random.choice(lines) + random.choice(lines)
 
 @app.route("/reddit/<subreddit>/<search>", methods=['GET'])
-def reddit_sub(subreddit, search):
-    return red.fetch_post(subreddit, search)
+def reddit_sub(search, subreddit):
+    return red.fetch_post(search, subreddit)
 
 @app.route("/reddit/<search>")
 def reddit(search):
-    return red.fetch_post("all", search)
+    return red.fetch_post(search)
 
 @app.route("/indico/keywords/<text>")
 def keywords(text):
     return ico.get_keywords(text)
+
+@app.route("/indico/tag/<text>")
+def tag(text):
+    return ico.get_tag(text)
 
 @app.errorhandler(404)
 def route_not_found(err):

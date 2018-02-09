@@ -1,8 +1,9 @@
 # Delivers a reddit post from a subreddit based on search critera
 import praw
-import random
+import prawcore
 import json
 import os
+import random
 
 if os.environ.get('IS_HEROKU', None):
     reddit_secret = os.environ.get('REDDIT_SECRET', '')
@@ -15,10 +16,20 @@ reddit = praw.Reddit(client_id='Us-byLFTjQmSJQ',
                      client_secret=reddit_secret,
                      user_agent='python:com.ryanabraham.whophone:v1.0')
 
-# search_text should be passed in as a string
-def fetch_post(subreddit, search_text):
+"""Return post information based on the search criteria
+search_text -- Text to search for on Reddit - string
+subreddit -- Subreddit to search - string (Optional)"""
+def fetch_post(search_text, subreddit="all"):
     all_posts = reddit.subreddit(subreddit)
-    for post in all_posts.search(search_text, limit=1):
+    search_results = []
+    try:
+        search_results = list(all_posts.search(search_text, limit=10))
+    except prawcore.exceptions.Redirect:
+        print("WARNING: Could not find subreddit %s" % (subreddit))
+    except prawcore.exceptions.RequestException:
+        print("ERROR: Could not establish connection to Reddit")
+    if search_results:
+        post = random.choice(search_results)
         return json.dumps({
             'title': post.title,
             'text': post.selftext,
